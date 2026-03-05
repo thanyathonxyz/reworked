@@ -2251,10 +2251,22 @@ __modules["Creator"] = function()
 end
 
 __modules["Elements"] = function()
+	-- Load all element types explicitly (compatible with bundled/executor usage)
 	local Elements = {}
 	
-	for _, Theme in next, script:GetChildren() do
-		table.insert(Elements, require(Theme))
+	local ElementModules = {
+		__require("Elements.Button"),
+		__require("Elements.Colorpicker"),
+		__require("Elements.Dropdown"),
+		__require("Elements.Input"),
+		__require("Elements.Keybind"),
+		__require("Elements.Paragraph"),
+		__require("Elements.Slider"),
+		__require("Elements.Toggle"),
+	}
+	
+	for _, Module in next, ElementModules do
+		table.insert(Elements, Module)
 	end
 	
 	return Elements
@@ -4955,6 +4967,7 @@ __modules["Packages.Flipper.isMotor.spec"] = function()
 end
 
 __modules["Themes"] = function()
+	local Root = __get_script_proxy("_ROOT_")
 	local Themes = {
 		Names = {
 			"Dark",
@@ -4966,9 +4979,18 @@ __modules["Themes"] = function()
 		},
 	}
 	
-	for _, Theme in next, script:GetChildren() do
-		local Required = require(Theme)
-		Themes[Required.Name] = Required
+	-- Load each theme explicitly (compatible with bundled/executor usage)
+	local ThemeModules = {
+		__require("Themes.Dark"),
+		__require("Themes.Darker"),
+		__require("Themes.Light"),
+		__require("Themes.Aqua"),
+		__require("Themes.Amethyst"),
+		__require("Themes.Rose"),
+	}
+	
+	for _, Theme in next, ThemeModules do
+		Themes[Theme.Name] = Theme
 	end
 	
 	return Themes
